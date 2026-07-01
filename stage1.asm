@@ -60,6 +60,116 @@ top_row:
     loop top_row
 
 
+    mov dh, 22      ; row = 22 (Bottem border row)
+    mov dl, 2       ; col = 2 (start from left)
+    mov cx, 76      ; Length -2 -1
+
+  bottem_row:
+
+      push cx         ; save loop counter (mul might affect things)
+      push dx
+
+      mov ax, dx      ; dx(row,column)--> ax(ah(row),al(column))
+      mov al, ah
+      xor ah, ah      ; 0 out ah 
+
+      mov bx, 80
+      mul bx
+
+      pop dx          ; restore DH=row, DL=col
+      push dx  
+
+      xor bh,bh
+      mov bl, dl
+      add ax, bx
+
+      shl ax, 1
+      mov bx, ax
+      ; Write the block character
+      mov byte [es:bx], 0xDB        ; what character?
+      mov byte [es:bx+1], 0x0E      ; what color?
+
+      pop dx          ; restore DX again
+      pop cx 
+      
+      ; Move to next column
+      inc dl
+      loop bottem_row
+
+    
+   mov dh, 2       ; row = 2 (top border row)
+   mov dl, 2       ; col = 2 (start from left)
+   mov cx, 21
+
+  left_row:
+
+      push cx         ; save loop counter (mul might affect things)
+      push dx
+
+      mov ax, dx      ; dx(row,column)--> ax(ah(row),al(column))
+      mov al, ah
+      xor ah, ah      ; 0 out ah 
+
+      mov bx, 80
+      mul bx
+
+      pop dx          ; restore DH=row, DL=col
+      push dx  
+
+      xor bh,bh
+      mov bl, dl
+      add ax, bx
+
+      shl ax, 1
+      mov bx, ax
+      ; Write the block character
+      mov byte [es:bx], 0xDB        ; what character?
+      mov byte [es:bx+1], 0x0E      ; what color?
+
+      pop dx          ; restore DX again
+      pop cx 
+      
+      ; Move to next column
+      inc dh
+      loop left_row
+
+  mov dh, 2       ; row = 2 (top border row)
+   mov dl, 77       ; col = 2 (start from left)
+   mov cx, 21
+
+  right_row:
+
+      push cx         ; save loop counter (mul might affect things)
+      push dx
+
+      mov ax, dx      ; dx(row,column)--> ax(ah(row),al(column))
+      mov al, ah
+      xor ah, ah      ; 0 out ah 
+
+      mov bx, 80
+      mul bx
+
+      pop dx          ; restore DH=row, DL=col
+      push dx  
+
+      xor bh,bh
+      mov bl, dl
+      add ax, bx
+
+      shl ax, 1
+      mov bx, ax
+      ; Write the block character
+      mov byte [es:bx], 0xDB        ; what character?
+      mov byte [es:bx+1], 0x0E      ; what color?
+
+      pop dx          ; restore DX again
+      pop cx 
+      
+      ; Move to next column
+      inc dh
+      loop right_row
+
+
   ; --- Step 5: Wait for any keypress before exiting ---
     mov ah, 00h
     int 16h
